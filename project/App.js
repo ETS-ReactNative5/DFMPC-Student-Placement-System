@@ -6,7 +6,6 @@ import Login from './Screens/Login'
 import Dashboard from './Screens/Dashboard'
 import Schedule from './Screens/Schedule'
 import Protocols from './Screens/Protocols'
-
 const Stack = createNativeStackNavigator();
 
 
@@ -15,10 +14,11 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen options={{headerShown:false}} name="Protocols" component={Protocols} />
+        <Stack.Screen options={{headerShown:false}} name="Emergency Protocols Page" component={Protocols} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Schedule" component={Schedule} />
         <Stack.Screen name="Login" component={Login} />
+        
        
         
       </Stack.Navigator>
