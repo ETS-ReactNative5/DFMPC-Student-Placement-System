@@ -1,50 +1,57 @@
-name: Tests
-on: [push, pull_request]
-env:
-  CI: true
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master, '[0-9]+.[0-9]+.x' ]
+  pull_request:
+    branches: [ master, '[0-9]+.[0-9]+.x' ]
 
 jobs:
-  test:
-    name: Node ${{ matrix.node }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  run-tests:
+
+    runs-on: windows-latest
 
     strategy:
-      fail-fast: false
       matrix:
-        node: [6, 8, 10, 12, 14]
-        os: [ubuntu-latest, windows-latest]
+        node-version: [10.x, 12.x, 14.x]
 
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        repo-token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ github.token }}
+    - run: npm ci
+    - run: npm run lint:lib
+    - run: npm run build:lib
+    - run: npm run test:lib:others
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+    - run: npm run test:lib:grid
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+    - run: npm run test:lib:tgrid
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+    - run: npm run test:lib:hgrid
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
+    - run: npm run test:schematics
+    - name: Install coverage combiner
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+      run: sudo npm install -g istanbul-combine
+    - name: Combine scripts
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+      run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+    - name: Coveralls GitHub Action
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+      uses: coverallsapp/github-action@v1.1.2
+      with:
+        github-token: ${{ github.token }}
 
-      - name: Set Node.js version
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Install npm dependencies
-        run: npm install # switch to `npm ci` when Node.js 6 support is dropped
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test-cov
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: ${{matrix.os}}-node-${{ matrix.node }}
-          parallel: true
-
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
