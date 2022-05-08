@@ -114,7 +114,7 @@ const Login = () => {
     <View style={{paddingTop:12, width:"40%"}}>
     <LinearGradient colors={['rgba(28,72,123,255)', ' rgba(28,72,123,255))', 'rgba(28,72,123,255)']} style={styles.linearGradient}>
     <TouchableOpacity
-          onPress={()=>{navigation.navigate("Dashboard")}}   // when user clicks on login button 
+          onPress={()=>{LoginFirebase()}}   // when user clicks on login button 
           >
           <Text style={styles.buttonText}>Login</Text>
 
