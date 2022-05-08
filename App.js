@@ -9,27 +9,39 @@ import CalendarView from "./Screens/CalendarView";
 import SettingsView from "./Screens/Settings";
 import Protocols from "./Screens/Protocols";
 import DayAgenda from "./Screens/DayAgenda";
+import AppContext from './AppContext';
+import React, { useState } from "react";
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+
+  const [student_id, setStudent_id] = useState(0);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        { <Stack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={Login}
-        /> }
-        <Stack.Screen name="Dashboard" component={Dashboard} />
-        <Stack.Screen name="Schedule" component={Schedule} />
-        <Stack.Screen name="CalendarView" component={CalendarView} />
-        <Stack.Screen name="SettingsView" component={SettingsView} />
-        <Stack.Screen name="Protocols" component={Protocols} />
-        <Stack.Screen name="DayAgenda" component={DayAgenda} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AppContext.Provider value={globalVariables}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          { <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={Login}
+          /> }
+          <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen name="Schedule" component={Schedule} />
+          <Stack.Screen name="CalendarView" component={CalendarView} />
+          <Stack.Screen name="SettingsView" component={SettingsView} />
+          <Stack.Screen name="Protocols" component={Protocols} />
+          <Stack.Screen name="DayAgenda" component={DayAgenda} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppContext.Provider>
   );
+
+  const globalVariables = {
+    student_id: student_id,
+    setStudent_id
+  }
 }
 
 const styles = StyleSheet.create({

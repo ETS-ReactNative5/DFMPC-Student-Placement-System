@@ -25,8 +25,8 @@ const ICON_SIZE = 80;
 const SPACING = 20;
 const image = { uri: "https://reactjs.org/logo-og.png" };
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("john@gmail.com");
+  const [password, setPassword] = useState("John_pass123");
   const navigation = useNavigation();
 
   function showAlert(title, message) {
