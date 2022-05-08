@@ -10,40 +10,9 @@ import {
 import {getSchedule} from './RetrieveSchedules'
 import {firebase} from "../firebase"
 
-
-function listState(){
-  const[state,setState]=useState([])
-
-  useEffect(()=>{
-    firebase
-    .database()
-    .ref('/schedules')
-    .on('value',snapshot=>{
-      const newState=[]
-      const key = snapshot.forEach(function(data) {
-        newState.push({key1:schedules.length+1,created_at:snapshot.child(data.key+"/created_at").val(),
-        hospital_ID:snapshot.child(data.key+"/hospital_id").val(),
-        ID:snapshot.child(data.key+"/id").val(),
-        specialty_duration:snapshot.child(data.key+"/specialty_duration").val(),
-        specialty_id:snapshot.child(data.key+"/specialty_id").val(),
-        student_id:snapshot.child(data.key+"/student_id").val(),
-        updated_at:snapshot.child(data.key+"/updated_at").val(),
-        week_no:snapshot.child(data.key+"/week_no").val(),})
-      })
-      setState(newState)
-    })
-  },[])
-  
-
-
-  return state  
-}
-
 const Schedules =
 ()=>{
    
-
-
 
   const[state,setState]=useState({scheduleList: [{key1:0,
   created_at:"",
