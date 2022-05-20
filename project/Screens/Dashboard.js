@@ -263,6 +263,8 @@ const Dashboard = () => {
       <View>
         <TouchableHighlight
           onPress={() => {
+            // this is thr panic button and must do panic stuff
+            // not protocol
             navigation.navigate("Protocols");
           }}
         >
